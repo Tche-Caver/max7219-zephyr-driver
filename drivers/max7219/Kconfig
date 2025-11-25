@@ -1,5 +1,5 @@
 #menuconfig option
-config MAX7219
+config MAX7219_LED_MATRIX
     bool "MAX7219 driver (for 8x8 LED matrix)"
     default n           #disabled by default
     depends on SPI      #SPI driver must be enabled
