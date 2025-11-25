@@ -1,0 +1,46 @@
+#Description
+description: MAX7219 driver, to be used with 8x8 LED matrix
+
+Example Devicetree definition:
+
+ &spi0 {
+
+    temp0: max7219@0 {
+        status = "okay";
+        compatible = "adi,max7219";
+        reg = <0>;
+        spi-max-frequency = <1000000>; /* conservatively set to 1MHz */
+    };
+  }
+
+
+#Compatible part
+compatible: "adi,max7219"
+
+include: ["spi-device.yaml", "base.yaml"]
+
+properties:
+  intensity:
+    type: int
+    required: true
+    description: LED matrix display intensity (duty cycle)
+    enum:
+      - 0    # 1/32 duty cycle (minimum brightness)
+      - 1    # 3/32 duty cycle
+      - 2    # 5/32 duty cycle
+      - 3    # 7/32 duty cycle
+      - 4    # 9/32 duty cycle
+      - 5    # 11/32 duty cycle
+      - 6    # 13/32 duty cycle
+      - 7    # 15/32 duty cycle
+      - 8    # 17/32 duty cycle
+      - 9    # 19/32 duty cycle
+      - 10   # 21/32 duty cycle
+      - 11   # 23/32 duty cycle
+      - 12   # 25/32 duty cycle
+      - 13   # 27/32 duty cycle
+      - 14   # 29/32 duty cycle
+      - 15   # 31/32 duty cycle (maximum brightness)
+
+
+  

@@ -1,4 +1,5 @@
 #include <zephyr/drivers/spi.h>
+#include <zephyr/device.h>
 
 
 //Device registers
@@ -29,4 +30,5 @@ struct led_matrix_api{
 
 struct max7219_config {
     struct spi_dt_spec bus;
+    uint32_t intensity;
 }

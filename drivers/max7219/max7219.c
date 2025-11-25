@@ -13,14 +13,14 @@ LOG_MODULE_REGISTER(max7219);
 //Function declarations------------------------------------------------------
 
 static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data);
-static int max7219_init (const struct device *dev);
+static int max7219_init (const struct device *dev, uint32_t intensity);
 static int led_matrix_test (const struct device *dev, uint8_t mode);
 static int led_matrix_write (const struct device *dev, uint8_t data);
 
 
 //Private functions (init function)------------------------------------------
 
-max7219_init(const struct device *dev){
+max7219_init(const struct device *dev, uint32_t intensity){
 
 const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
 const struct spi_dt_spec * led_drv = &cfg->bus;
@@ -30,9 +30,11 @@ if (!spi_is_ready_dt(led_drv)){
     return -1;
 }
 
+uint8_t bright = (uint8_t)((cfg->intensity) & 0x000F);
+
 max7219_reg_write(dev, REG_SHUTDOWN, VAL_SHUTDOWN_ON);      //Shutdown register (0xXC) -> 0xX1 (enable)
 max7219_reg_write(dev, REG_DECODE, VAL_DECODE_NONE);        //Decode register (0xX9) -> 0x00 (no decode: each bit corresponds to an LED/segment)
-max7219_reg_write(dev, REG_INTENSITY, VAL_INTENSITY_MAX);   //Intensity register, duty cycle (0xXA) -> 0xXF (31/32 duty cycle, full intensity)
+max7219_reg_write(dev, REG_INTENSITY, bright);   //Intensity register, duty cycle (0xXA) -> 0xXF (31/32 duty cycle, full intensity)
 max7219_reg_write(dev, REG_SCAN, VAL_SCAN_ALL_ON);           //Scan register (0xXB) -> 0xX7 (All digits on)
 
 printk("\nMAX7219 initialization complete.\n");
@@ -59,9 +61,7 @@ static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data
 
     //Error handling
     if (ret){
-
         LOG_DBG("SPI transaction failed with code %d\n", ret);
-
     };
 
     return ret;
@@ -122,8 +122,9 @@ static const struct led_matrix_api led_matrix_api_functions = {
                     SPI_CS_ACTIVE_LOW |     \
                     SPI_MODE_CPOL |         \
                     SPI_TRANSFER_MSB,       \
-                    0),
-    }
+                    0),                     \
+        .intensity = DT_INST_PROP(inst, intensity)                   \
+    };                                      \
 
 
 //Device instance created from devicetree node, register init function
@@ -133,8 +134,10 @@ DEVICE_DT_INST_DEFINE(inst,                         \
                       NULL,                         \
                       &max7219_config_##inst,       \
                       POST_KERNEL,                  \
-                      CONFIG_SENSOR_INIT_PRIORITY,  \
+                      CONFIG_SPI_INIT_PRIORITY,     \
                       &led_matrix_api_functions);   \
+
+DT_INST_FOREACH_STATUS_OKAY(MAX7219_DEFINE)
 
 
 
