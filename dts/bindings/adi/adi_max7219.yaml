@@ -1,8 +1,9 @@
 #Description
 description: MAX7219 driver, to be used with 8x8 LED matrix
 
-#Example Devicetree definition:
+# Example Devicetree definition:
 #  &spi0 {
+
 #     temp0: max7219@0 {
 #         status = "okay";
 #         compatible = "adi,max7219";

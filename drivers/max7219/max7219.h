@@ -26,9 +26,9 @@ struct led_matrix_api{
     int (*test)(const struct device *dev, uint8_t mode);     //Test mode that will turn all LEDs on/off depending on mode variable
     int (*write)(const struct device *dev, uint8_t *data);    //8-element array of unsigned 8-bit int passed into data, bits of each element control each row of LEDs
     
-}
+};
 
 struct max7219_config {
     struct spi_dt_spec bus;
     uint32_t intensity;
-}
+};
