@@ -1,2 +1,2 @@
 #Add directory if CONFIG_MAX7219_LED_MATRIX is selected
-add_subdirectory_ifdef(CONFIG_MAX7219 max7219)
+add_subdirectory_ifdef(CONFIG_MAX7219_LED_MATRIX max7219)
