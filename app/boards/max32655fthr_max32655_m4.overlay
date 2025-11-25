@@ -1,6 +1,6 @@
 /{
     aliases{
-        led_matrix = &led_matrix0;
+        led-matrix = &led_matrix0;
     };
 };
 
@@ -8,7 +8,7 @@
 &spi0{
 
     status = "okay";    
-    
+
     led_matrix0: max7219@0 {
         compatible = "adi,max7219";
         status = "okay";

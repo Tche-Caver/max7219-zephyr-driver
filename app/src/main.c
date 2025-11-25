@@ -12,18 +12,36 @@
 
 #include <app_version.h>
 
+#define TEST_EN 1
+#define TEST_DIS 0
+
 LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
 int main (void){
 
+	uint8_t output[8]= {
+		0b10000000;
+		0b10000000;
+		0b10000000;
+		0b10000000;
+		0b10000000;
+		0b10000000;
+		0b10000000;
+		0b10000000;
+
+	};
+
 	printk("MAX7219 LED matrix driver application.\n");
 
-	const struct device *led_matrix0 = DEVICE_DT_GET(DT_ALIAS(led_matrix));
-
+	const struct device *led_matrix0 = DEVICE_DT_GET(DT_ALIAS(led-matrix));
 	const struct led_matrix_api *led_matr_api = (const struct led_matrix_api *)led_matrix0-> api;
 
+	led_matr_api->test(led_matrix0, TEST_EN);
+	k_sleep(K_MSEC(1000));
+	led_matr_api->test(led_matrix0, TEST_DIS);
+	k_sleep(K_MSEC(1000));
 
-	led_matr_api->test(led_matrix0, 1);
+	led_matr_api->write(led_matrix0, output);
 
 	return 0;
 
