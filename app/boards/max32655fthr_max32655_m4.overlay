@@ -6,9 +6,10 @@
 
 
 &spi0{
-    status = "okay";
+
+    status = "okay";    
     
-    led_matrix0 : max7219@0 {
+    led_matrix0: max7219@0 {
         compatible = "adi,max7219";
         status = "okay";
         reg = <0>;
