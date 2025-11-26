@@ -33,17 +33,17 @@ int main (void){
 
 	printk("MAX7219 LED matrix driver application.\n");
 
-	const struct device *led_matrix0 = DEVICE_DT_GET(DT_ALIAS(led-matrix));
-	const struct led_matrix_api *led_matr_api = (const struct led_matrix_api *)led_matrix0-> api;
+	 const struct device *led_matrix0 = DEVICE_DT_GET(DT_ALIAS(led_matrix));
+	 const struct led_matrix_api *led_matr_api = (const struct led_matrix_api *)led_matrix0-> api;
 
-	led_matr_api->test(led_matrix0, TEST_EN);
-	k_sleep(K_MSEC(1000));
-	led_matr_api->test(led_matrix0, TEST_DIS);
-	k_sleep(K_MSEC(1000));
+	 led_matr_api->test(led_matrix0, TEST_EN);
+	 k_sleep(K_MSEC(1000));
+	 led_matr_api->test(led_matrix0, TEST_DIS);
+	 k_sleep(K_MSEC(1000));
 
-	led_matr_api->write(led_matrix0, output);
+	 led_matr_api->write(led_matrix0, output);
 
-	return 0;
+	 return 0;
 
 }
 

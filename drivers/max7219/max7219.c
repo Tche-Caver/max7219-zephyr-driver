@@ -15,12 +15,12 @@ LOG_MODULE_REGISTER(max7219);
 static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data);
 static int max7219_init (const struct device *dev, uint32_t intensity);
 static int led_matrix_test (const struct device *dev, uint8_t mode);
-static int led_matrix_write (const struct device *dev, uint8_t data);
+static int led_matrix_write (const struct device *dev, uint8_t *data);
 
 
 //Private functions (init function)------------------------------------------
 
-max7219_init(const struct device *dev, uint32_t intensity){
+static int max7219_init(const struct device *dev, uint32_t intensity){
 
 const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
 const struct spi_dt_spec * led_drv = &cfg->bus;
@@ -57,7 +57,7 @@ static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data
     const struct spi_buf_set tx = {.buffers = &tx_buf, .count = 1};
     
     //Perform SPI transaction, return value is ret
-    ret= spi_write_dt(&led_drv, &tx);
+    ret= spi_write_dt(led_drv, &tx);
 
     //Error handling
     if (ret){
@@ -73,7 +73,7 @@ static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data
 
 static int led_matrix_test (const struct device *dev, uint8_t mode){
 
-    const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
+    //const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
 
     if(mode){
         max7219_reg_write(dev, REG_TEST, VAL_TEST_ENABLE);  //Test mode enabled, all LEDs on (0xXF) -> 0xX1  
@@ -81,7 +81,7 @@ static int led_matrix_test (const struct device *dev, uint8_t mode){
     }
     else{
         max7219_reg_write(dev, REG_TEST, VAL_TEST_DISABLE);  //Test mode enabled, all LEDs off (0xXF) -> 0xX0
-        ("\nMAX7219 test mode disabled (all LEDs off).\n");
+        printk("\nMAX7219 test mode disabled (all LEDs off).\n");
     }
 }
 
@@ -89,13 +89,15 @@ static int led_matrix_test (const struct device *dev, uint8_t mode){
 
 static int led_matrix_write (const struct device *dev, uint8_t *data){
 
-    const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
+    //const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
     
     for(int i = 0; i < 8; i++){
-    max7219_reg_write(dev, (REG_LEDROW_BASE + i), (data + i));  
+    max7219_reg_write(dev, (REG_LEDROW_BASE + i), *(data + i));  
     }
 
-    ("\nFinished LED matrix write.\n");
+    printk("\nFinished LED matrix write.\n");
+
+    return 0;
 }
 
 
@@ -112,31 +114,32 @@ static const struct led_matrix_api led_matrix_api_functions = {
 };
 
 //MAX7219 instances
+
+    //Config struct instances               
+    //Zephyr will populate instance value, create config struct variable for each instance initialized in Devicetree
+
 #define MAX7219_DEFINE(inst)                \
                                             \
-    //Config struct instances               \
-    //Zephyr will populate instance value, create config struct variable for each instance initialized in Devicetree
-    static const struct max7219_config max7219_config_##inst = {
+    static const struct max7219_config max7219_config_##inst = {    \
         .bus = SPI_DT_SPEC_INST_GET(inst,   \
                     SPI_WORD_SET(8) |       \
-                    SPI_CS_ACTIVE_LOW |     \
-                    SPI_MODE_CPOL |         \
                     SPI_TRANSFER_MSB,       \
                     0),                     \
         .intensity = DT_INST_PROP(inst, intensity)                   \
-    };                                      \
-
-
-//Device instance created from devicetree node, register init function
+    };                            \
+                                                                    \
+                                                                    \
+                                                                    \
+/*Device instance created from devicetree node, register init function*/ \
 DEVICE_DT_INST_DEFINE(inst,                         \
                       &max7219_init,                \
                       NULL,                         \
                       NULL,                         \
                       &max7219_config_##inst,       \
                       POST_KERNEL,                  \
-                      CONFIG_SPI_INIT_PRIORITY,     \
-                      &led_matrix_api_functions);   \
-
+                      CONFIG_GPIO_INIT_PRIORITY,     \
+                      &led_matrix_api_functions);   
+                                                                    
 DT_INST_FOREACH_STATUS_OKAY(MAX7219_DEFINE)
 
 

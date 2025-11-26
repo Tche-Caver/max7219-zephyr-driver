@@ -19,3 +19,4 @@ manifest:
         name-allowlist:
           - cmsis_6    # required by the ARM port for Cortex-M
           - hal_adi # required by the custom_plank board (Nordic based)
+          - cmsis
