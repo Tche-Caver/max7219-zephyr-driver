@@ -16,6 +16,7 @@ Hardware required:
 - MAX7219 with 8x8 LED Matrix (Can be found on Amazon)
 - Sparkfun Logic level converter (4 channel, bidirectional)
 - Micro USB cable (with data transfer capabilities)
+- Jumper wires
   
 Hardware Setup:
 - Connect the SPI pins on the MAX32655FTHR to the level shifter's LV side (LV1, LV2...).  MISO is not needed.
