@@ -20,7 +20,6 @@
 #define VAL_TEST_DISABLE 0x00
 
 
-
 //Custom LED matrix driver API for MAX7219 with 8x8 LED matrix
 struct led_matrix_api{
     int (*test)(const struct device *dev, uint8_t mode);     //Test mode that will turn all LEDs on/off depending on mode variable

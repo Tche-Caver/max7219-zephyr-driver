@@ -32,10 +32,17 @@ if (!spi_is_ready_dt(led_drv)){
 
 uint8_t bright = (uint8_t)((cfg->intensity) & 0x000F);
 
-max7219_reg_write(dev, REG_SHUTDOWN, VAL_SHUTDOWN_ON);      //Shutdown register (0xXC) -> 0xX1 (enable)
 max7219_reg_write(dev, REG_DECODE, VAL_DECODE_NONE);        //Decode register (0xX9) -> 0x00 (no decode: each bit corresponds to an LED/segment)
+max7219_reg_write(dev, REG_SHUTDOWN, VAL_SHUTDOWN_ON);      //Shutdown register (0xXC) -> 0xX1 (enable)
+max7219_reg_write(dev, REG_TEST, VAL_TEST_DISABLE);          //Test mode enabled, all LEDs on (0xXF) -> 0xX1 
 max7219_reg_write(dev, REG_INTENSITY, bright);   //Intensity register, duty cycle (0xXA) -> 0xXF (31/32 duty cycle, full intensity)
 max7219_reg_write(dev, REG_SCAN, VAL_SCAN_ALL_ON);           //Scan register (0xXB) -> 0xX7 (All digits on)
+
+//Set all output values to 0 (no LEDs on)
+for(int i = 0; i < 8; i++){
+    max7219_reg_write(dev, (REG_LEDROW_BASE + i), 0x00);  
+    }
+
 
 printk("\nMAX7219 initialization complete.\n");
 
@@ -51,6 +58,8 @@ static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data
 
     //Combine register and data into SPI packet for device
     uint8_t packet[2] = {(reg & 0x0F), data};
+
+    //uint8_t packet[2] = {0xAA, 0xAA};
 
     //Zephyr SPI API structures
     const struct spi_buf tx_buf = {.buf = packet, .len = sizeof(packet)};
@@ -76,7 +85,7 @@ static int led_matrix_test (const struct device *dev, uint8_t mode){
     //const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
 
     if(mode){
-        max7219_reg_write(dev, REG_TEST, VAL_TEST_ENABLE);  //Test mode enabled, all LEDs on (0xXF) -> 0xX1  
+       max7219_reg_write(dev, REG_TEST, VAL_TEST_ENABLE);  //Test mode enabled, all LEDs on (0xXF) -> 0xX1  
         printk("\nMAX7219 test mode enabled (all LEDs on).\n");
     }
     else{
