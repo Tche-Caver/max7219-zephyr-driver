@@ -4,6 +4,7 @@ This driver allows users to program a MAX7219 chip to be used with an 8x8 LED ma
 This repository contains:
 - Zephyr device driver for the MAX7219 for use with an LED matrix
 - Devicetree overlays for the MAX32655FTHR and APARD32690
+- Kconfig prj.conf enabling the driver as well as SPI
 - Sample application code which flashes the display, then outputs the Analog Devices logo
 
 This application requires basic Zephyr knowledge of workspaces, etc.
