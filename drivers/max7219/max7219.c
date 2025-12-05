@@ -118,8 +118,8 @@ static int led_matrix_write (const struct device *dev, uint8_t *data){
 
 //Assigning private led_matrix_test and led_matrix_write functions to public API (test, write)
 static const struct led_matrix_api led_matrix_api_functions = {
-    .test = led_matrix_test,
-    .write = led_matrix_write,
+    .test = &led_matrix_test,
+    .write = &led_matrix_write,
 };
 
 //MAX7219 instances
