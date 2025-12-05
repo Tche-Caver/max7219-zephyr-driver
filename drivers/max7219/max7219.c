@@ -13,14 +13,14 @@ LOG_MODULE_REGISTER(max7219);
 //Function declarations------------------------------------------------------
 
 static int max7219_reg_write(const struct device *dev, uint8_t reg, uint8_t data);
-static int max7219_init (const struct device *dev, uint32_t intensity);
+static int max7219_init (const struct device *dev);
 static int led_matrix_test (const struct device *dev, uint8_t mode);
 static int led_matrix_write (const struct device *dev, uint8_t *data);
 
 
 //Private functions (init function)------------------------------------------
 
-static int max7219_init(const struct device *dev, uint32_t intensity){
+static int max7219_init(const struct device *dev){
 
 const struct max7219_config * cfg = (const struct max7219_config *)dev->config;
 const struct spi_dt_spec * led_drv = &cfg->bus;
