@@ -4,6 +4,7 @@ This driver allows users to program a MAX7219 chip to be used with an 8x8 LED ma
 This repository contains:
 - Zephyr device driver for the MAX7219 for use with an LED matrix
 - Devicetree overlays for the MAX32655FTHR and APARD32690
+- Kconfig prj.conf enabling the driver as well as SPI
 - Sample application code which flashes the display, then outputs the Analog Devices logo
 
 This application requires basic Zephyr knowledge of workspaces, etc.
@@ -15,6 +16,7 @@ Hardware required:
 - MAX7219 with 8x8 LED Matrix (Can be found on Amazon)
 - Sparkfun Logic level converter (4 channel, bidirectional)
 - Micro USB cable (with data transfer capabilities)
+- Jumper wires
   
 Hardware Setup:
 - Connect the SPI pins on the MAX32655FTHR to the level shifter's LV side (LV1, LV2...).  MISO is not needed.
